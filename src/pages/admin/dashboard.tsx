@@ -4,9 +4,11 @@ import { authService } from "@/services/authService";
 import { getAllNotices, createNotice, updateNotice, deleteNotice } from "@/services/noticeService";
 import { getAllInquiries, updateInquiryStatus } from "@/services/admissionService";
 import { uploadImage, getAllGalleryImages, deleteImage } from "@/services/galleryService";
+import { getAllDonations, updateDonationStatus, deleteDonation } from "@/services/donationService";
 import type { Notice } from "@/services/noticeService";
 import type { AdmissionInquiry } from "@/services/admissionService";
 import type { GalleryImage } from "@/services/galleryService";
+import type { Donation } from "@/services/donationService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -31,6 +33,7 @@ import {
   Trash2,
   Check,
   X,
+  Heart,
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -39,6 +42,7 @@ export default function AdminDashboard() {
   const [notices, setNotices] = useState<Notice[]>([]);
   const [inquiries, setInquiries] = useState<AdmissionInquiry[]>([]);
   const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
+  const [donations, setDonations] = useState<Donation[]>([]);
   const [activeTab, setActiveTab] = useState("notices");
 
   const [noticeForm, setNoticeForm] = useState({
@@ -64,14 +68,16 @@ export default function AdminDashboard() {
   }, [router]);
 
   async function loadData() {
-    const [noticesData, inquiriesData, imagesData] = await Promise.all([
+    const [noticesData, inquiriesData, imagesData, donationsData] = await Promise.all([
       getAllNotices(),
       getAllInquiries(),
       getAllGalleryImages(),
+      getAllDonations(),
     ]);
     setNotices(noticesData);
     setInquiries(inquiriesData);
     setGalleryImages(imagesData);
+    setDonations(donationsData);
   }
 
   async function handleSignOut() {
@@ -124,6 +130,18 @@ export default function AdminDashboard() {
     await loadData();
   }
 
+  async function handleDonationStatus(id: string, status: string) {
+    await updateDonationStatus(id, status);
+    await loadData();
+  }
+
+  async function handleDeleteDonation(id: string) {
+    if (confirm("Delete this donation record?")) {
+      await deleteDonation(id);
+      await loadData();
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -146,7 +164,7 @@ export default function AdminDashboard() {
 
       <main className="container py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="notices" className="gap-2">
               <Bell className="h-4 w-4" />
               Notices ({notices.length})
@@ -154,6 +172,10 @@ export default function AdminDashboard() {
             <TabsTrigger value="inquiries" className="gap-2">
               <Users className="h-4 w-4" />
               Inquiries ({inquiries.length})
+            </TabsTrigger>
+            <TabsTrigger value="donations" className="gap-2">
+              <Heart className="h-4 w-4" />
+              Donations ({donations.length})
             </TabsTrigger>
             <TabsTrigger value="gallery" className="gap-2">
               <ImageIcon className="h-4 w-4" />
@@ -360,6 +382,82 @@ export default function AdminDashboard() {
                       >
                         <X className="h-4 w-4 mr-1" />
                         Pending
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+              ))
+            )}
+          </TabsContent>
+
+          <TabsContent value="donations" className="space-y-4">
+            {donations.length === 0 ? (
+              <Alert>
+                <AlertDescription>No donations yet</AlertDescription>
+              </Alert>
+            ) : (
+              donations.map((donation) => (
+                <Card key={donation.id} className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-display text-lg font-semibold">
+                          {donation.donor_name}
+                        </h3>
+                        <span
+                          className={`text-xs px-2 py-1 rounded-full ${
+                            donation.status === "received"
+                              ? "bg-success/20 text-success"
+                              : donation.status === "pending"
+                              ? "bg-accent/20 text-accent"
+                              : "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          {donation.status}
+                        </span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        <p>
+                          <strong>Phone:</strong> {donation.phone}
+                        </p>
+                        {donation.email && (
+                          <p>
+                            <strong>Email:</strong> {donation.email}
+                          </p>
+                        )}
+                        {donation.amount && (
+                          <p>
+                            <strong>Amount:</strong> ₹{donation.amount.toLocaleString()}
+                          </p>
+                        )}
+                        <p>
+                          <strong>Purpose:</strong> {donation.purpose}
+                        </p>
+                        {donation.message && (
+                          <p className="mt-2">
+                            <strong>Message:</strong> {donation.message}
+                          </p>
+                        )}
+                        <p className="text-xs mt-2">
+                          {new Date(donation.created_at || "").toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDonationStatus(donation.id, "received")}
+                      >
+                        <Check className="h-4 w-4 mr-1" />
+                        Received
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDeleteDonation(donation.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>

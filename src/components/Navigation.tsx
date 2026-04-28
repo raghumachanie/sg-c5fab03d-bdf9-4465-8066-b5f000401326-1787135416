@@ -13,6 +13,7 @@ export function Navigation() {
     { href: "/academics", label: "Academics" },
     { href: "/gallery", label: "Gallery" },
     { href: "/admissions", label: "Admissions" },
+    { href: "/donate", label: "Donate" },
     { href: "/contact", label: "Contact" },
   ];
 
