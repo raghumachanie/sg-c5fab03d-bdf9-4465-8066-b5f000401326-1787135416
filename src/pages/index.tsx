@@ -2,7 +2,7 @@ import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { LatestNotices } from "@/components/LatestNotices";
 import Link from "next/link";
-import { ArrowRight, BookOpen, Heart, Users } from "lucide-react";
+import { ArrowRight, BookOpen, Heart, Users, Flame, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
@@ -13,50 +13,119 @@ export default function Home() {
       <Navigation />
       
       <main className="flex-1">
-        <section className="relative py-20 md:py-32 bg-gradient-to-b from-primary to-primary/90 text-primary-foreground overflow-hidden">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-20"></div>
+        {/* Hero Section */}
+        <section className="relative py-16 md:py-24 overflow-hidden">
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 opacity-[0.03]">
+            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImxlYWYiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSA0MCAxMCBRIDUwIDIwIDQwIDMwIFEgMzAgMjAgNDAgMTAgWiBNIDIwIDQwIFEgMzAgNTAgMjAgNjAgUSAxMCA1MCAyMCA0MCBaIE0gNjAgNDAgUSA3MCA1MCA2MCA2MCBRIDUwIDUwIDYwIDQwIFoiIGZpbGw9IiMxYTVmNWYiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjbGVhZikiLz48L3N2Zz4=')] bg-repeat"></div>
+          </div>
           
           <div className="container relative z-10">
-            <div className="max-w-4xl mx-auto text-center space-y-8">
-              <div className="flex justify-center mb-6">
-                <div className="relative w-48 h-48 md:w-64 md:h-64">
-                  <Image
-                    src="/logo.jpg"
-                    alt="Sri Sai Balaji Educational Trust"
-                    fill
-                    className="object-contain drop-shadow-2xl"
-                    priority
-                  />
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Left content */}
+              <div className="space-y-6">
+                <div className="inline-block">
+                  <div className="relative w-32 h-32 md:w-40 md:h-40">
+                    <Image
+                      src="/logo.jpg"
+                      alt="Sri Sai Balaji Educational Trust"
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                </div>
+                
+                <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
+                  Sri Sai Balaji<br />
+                  <span className="text-primary">Educational Trust</span>
+                </h1>
+                
+                <p className="font-display text-2xl md:text-3xl text-accent font-medium italic leading-relaxed">
+                  Nurturing Minds,<br />Building Futures
+                </p>
+                
+                <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
+                  Providing affordable quality education for underprivileged children from Baby Class to 5th Standard. Together, we build a brighter tomorrow.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 font-semibold">
+                    <Link href="/admissions">
+                      Apply for Admission
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-semibold">
+                    <Link href="/donate">Support Our Mission</Link>
+                  </Button>
                 </div>
               </div>
-              
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Sri Sai Balaji Educational Trust
-              </h1>
-              
-              <p className="font-display text-xl md:text-2xl text-accent font-medium italic">
-                Nurturing Minds, Building Futures
-              </p>
-              
-              <p className="text-lg md:text-xl opacity-95 max-w-2xl mx-auto">
-                Providing affordable quality education for underprivileged children from Baby Class to 5th Standard
-              </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <Button asChild size="lg" variant="secondary" className="font-semibold">
-                  <Link href="/admissions">
-                    Apply for Admission
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary font-semibold">
-                  <Link href="/contact">Contact Us</Link>
-                </Button>
+              {/* Right - Hero image placeholder */}
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <div className="aspect-[4/3] bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <Users className="h-24 w-24 text-primary/40 mx-auto mb-4" />
+                    <p className="text-muted-foreground font-display italic">
+                      Students learning together in our modern library
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Three Call-to-Action Panels */}
+        <section className="py-12 bg-muted/30">
+          <div className="container">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {/* Panel 1: Diya - Community Commitment */}
+              <Card className="p-8 text-center border-2 border-accent/30 hover:border-accent transition-all hover:shadow-lg bg-card rounded-t-3xl">
+                <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
+                  <Flame className="h-8 w-8 text-accent" />
+                </div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-foreground">
+                  Our Commitment to Community
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Serving underprivileged families with dedication and compassion
+                </p>
+              </Card>
+
+              {/* Panel 2: Open Book - Quality Education */}
+              <Card className="p-8 text-center border-2 border-primary/30 hover:border-primary transition-all hover:shadow-lg bg-card rounded-t-3xl">
+                <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                  <BookOpen className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-foreground">
+                  Quality Education For All
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Affordable excellence preparing students for bright futures
+                </p>
+              </Card>
+
+              {/* Panel 3: Kalasha 'S' - Empowerment */}
+              <Card className="p-8 text-center border-2 border-success/30 hover:border-success transition-all hover:shadow-lg bg-card rounded-t-3xl">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-4">
+                  <div className="font-display text-3xl font-bold bg-gradient-to-br from-primary to-accent bg-clip-text text-transparent">
+                    S
+                  </div>
+                </div>
+                <h3 className="font-display text-xl font-semibold mb-2 text-foreground">
+                  Empowering the Underprivileged
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Breaking the cycle of poverty through education
+                </p>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Our Mission */}
         <section className="py-16 md:py-24 bg-white">
           <div className="container">
             <div className="text-center mb-12">
@@ -81,7 +150,7 @@ export default function Home() {
 
               <Card className="p-6 text-center border-2 hover:border-success transition-colors">
                 <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center mx-auto mb-4">
-                  <BookOpen className="h-8 w-8 text-success" />
+                  <Book className="h-8 w-8 text-success" />
                 </div>
                 <h3 className="font-display text-xl font-semibold mb-2">Excellence</h3>
                 <p className="text-muted-foreground">
@@ -102,6 +171,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Latest Notices */}
         <section className="py-16 md:py-24 bg-muted/30">
           <div className="container">
             <div className="text-center mb-12">
