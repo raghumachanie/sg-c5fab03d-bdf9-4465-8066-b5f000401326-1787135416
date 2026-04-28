@@ -52,10 +52,10 @@ export function Navigation() {
                 />
               </div>
               <div className="hidden sm:block">
-                <div className="logo-text text-xl text-primary leading-tight">
+                <div className="logo-title text-base leading-tight">
                   Sri Sai Balaji
                 </div>
-                <div className="subtitle-text text-[0.65rem] text-muted-foreground">
+                <div className="logo-subtitle text-[10px]">
                   Educational Trust
                 </div>
               </div>

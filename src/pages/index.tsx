@@ -36,13 +36,17 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <h1 className="logo-text text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
-                  Sri Sai Balaji<br />
-                  <span className="text-primary">Educational Trust</span>
-                </h1>
+                <div>
+                  <h1 className="logo-title text-4xl md:text-5xl lg:text-6xl mb-2">
+                    Sri Sai Balaji
+                  </h1>
+                  <p className="logo-subtitle text-sm md:text-base">
+                    Educational Trust
+                  </p>
+                </div>
                 
-                <p className="tagline-text text-2xl md:text-3xl text-accent leading-relaxed">
-                  Nurturing Minds,<br />Building Futures
+                <p className="logo-tagline text-xl md:text-2xl leading-relaxed">
+                  Nurturing Minds, Building Futures
                 </p>
                 
                 <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
