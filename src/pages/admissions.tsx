@@ -22,7 +22,7 @@ export default function Admissions() {
     parent_name: "",
     phone: "",
     email: "",
-    desired_class: "",
+    class_applying: "",
     message: "",
   });
   const [submitting, setSubmitting] = useState(false);
@@ -41,7 +41,7 @@ export default function Admissions() {
         parent_name: "",
         phone: "",
         email: "",
-        desired_class: "",
+        class_applying: "",
         message: "",
       });
     }
@@ -188,11 +188,11 @@ export default function Admissions() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="desired_class">Desired Class *</Label>
+                      <Label htmlFor="class_applying">Desired Class *</Label>
                       <Select
-                        value={formData.desired_class}
+                        value={formData.class_applying}
                         onValueChange={(value) =>
-                          setFormData({ ...formData, desired_class: value })
+                          setFormData({ ...formData, class_applying: value })
                         }
                         required
                       >

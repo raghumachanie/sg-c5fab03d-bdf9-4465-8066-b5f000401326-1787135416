@@ -22,7 +22,7 @@ export async function createInquiry(inquiry: {
   parent_name: string;
   phone: string;
   email?: string;
-  desired_class: string;
+  class_applying: string;
   message?: string;
 }): Promise<{ success: boolean; inquiry?: AdmissionInquiry; error?: string }> {
   const { data, error } = await supabase

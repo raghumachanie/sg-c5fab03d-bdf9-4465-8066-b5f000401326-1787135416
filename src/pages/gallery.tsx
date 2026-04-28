@@ -78,16 +78,16 @@ export default function Gallery() {
                     <div className="relative aspect-square">
                       <Image
                         src={image.image_url}
-                        alt={image.caption || "School gallery image"}
+                        alt={image.description || image.title || "School gallery image"}
                         fill
                         className="object-cover"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                       />
                     </div>
-                    {image.caption && (
+                    {image.description && (
                       <div className="p-4">
                         <p className="text-sm text-muted-foreground">
-                          {image.caption}
+                          {image.description}
                         </p>
                       </div>
                     )}

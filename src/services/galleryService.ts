@@ -37,7 +37,7 @@ export async function getGalleryImagesByCategory(
 export async function uploadImage(
   file: File,
   category: string,
-  caption?: string
+  description?: string
 ): Promise<{ success: boolean; image?: GalleryImage; error?: string }> {
   try {
     const fileExt = file.name.split(".").pop();
@@ -59,7 +59,7 @@ export async function uploadImage(
 
     const { data, error } = await supabase
       .from("gallery_images")
-      .insert({ image_url: publicUrl, category, caption })
+      .insert({ image_url: publicUrl, category, title: "Gallery Image", description })
       .select()
       .single();
 
