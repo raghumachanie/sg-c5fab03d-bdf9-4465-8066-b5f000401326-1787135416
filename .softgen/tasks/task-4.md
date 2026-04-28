@@ -1,6 +1,6 @@
 ---
 title: Gallery and image management
-status: todo
+status: done
 priority: medium
 type: feature
 tags: [gallery, images, admin]

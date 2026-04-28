@@ -1,6 +1,6 @@
 ---
 title: Admissions and Contact pages with forms
-status: todo
+status: done
 priority: high
 type: feature
 tags: [forms, admissions, contact]
