@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, GraduationCap } from "lucide-react";
+import { Menu, X, GraduationCap, Sun, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Navigation() {
@@ -20,7 +20,10 @@ export function Navigation() {
       <div className="container">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-primary-foreground">
-            <GraduationCap className="h-8 w-8" />
+            <div className="relative">
+              <Sun className="h-8 w-8 text-accent absolute -top-1 -left-1 group-hover:rotate-12 transition-transform" />
+              <BookOpen className="h-8 w-8 text-primary relative z-10" />
+            </div>
             <span className="font-display text-xl font-semibold">Sai Balaji Educational Trust</span>
           </Link>
 

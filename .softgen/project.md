@@ -10,16 +10,16 @@ A full-stack, mobile-responsive school management and information website for a 
 
 ## Design
 Color palette:
-- `--primary: 212 53% 25%` (warm navy)
-- `--accent: 45 95% 56%` (sunny yellow) 
-- `--success: 158 64% 39%` (fresh green)
-- `--background: 39 69% 94%` (warm cream)
-- `--foreground: 210 20% 20%` (dark slate)
-- `--muted: 39 30% 88%` (muted cream)
+- `--primary: 217 91% 60%` (bright blue)
+- `--accent: 45 93% 58%` (sunny yellow) 
+- `--success: 142 71% 45%` (fresh green)
+- `--background: 210 40% 98%` (light blue-tinted white)
+- `--foreground: 222 47% 11%` (deep blue-gray)
+- `--muted: 210 40% 96%` (soft blue-gray)
 
 Fonts: Fredoka (headings, rounded, playful), Nunito (body, clean, warm)
 
-Style: Community classroom aesthetic — rounded cards like bulletin boards, warm color blocks, generous spacing for mobile readability, CSS-only animations, data-efficient (minimal heavy images).
+Style: Warm and nurturing primary school aesthetic — bright blue and yellow create an optimistic learning environment. Sun + Book logo symbolizes knowledge and growth. Rounded cards, generous spacing for mobile readability, CSS-only animations, data-efficient design.
 
 ## Features
 **Public:**
