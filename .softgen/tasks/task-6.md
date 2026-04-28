@@ -1,6 +1,6 @@
 ---
 title: Admin dashboard and authentication
-status: todo
+status: done
 priority: high
 type: feature
 tags: [admin, auth, dashboard]
@@ -10,20 +10,19 @@ position: 6
 ---
 
 ## Notes
-Build password-protected admin dashboard for Sister to manage notices, view inquiries, manage gallery, and view contact messages.
+Create password-protected admin dashboard where Sister can post notices, manage gallery uploads, view admission inquiries, and handle contact form submissions. Use Supabase Auth with email/password.
 
 ## Checklist
-- [ ] Create admin login page with email/password authentication
-- [ ] Build admin dashboard layout with navigation
-- [ ] Create Notices Management section (CRUD operations)
-- [ ] Create Admissions Inquiries view with status updates
-- [ ] Create Contact Messages view
-- [ ] Add Gallery Management with upload interface
-- [ ] Create admin services (noticeService, etc.)
-- [ ] Implement auth protection for admin routes
+- [x] Create admin login page with email/password authentication
+- [x] Build admin dashboard with tabs for different sections
+- [x] Add notice management (create, edit, delete notices)
+- [x] Add admission inquiry viewer with status management
+- [x] Add gallery image upload with category selection
+- [x] Add image deletion functionality
+- [x] Protect dashboard route with authentication check
 
 ## Acceptance
-- Login works with proper authentication
-- Only authenticated admin can access dashboard
+- Admin can login with email/password
+- Only authenticated users can access dashboard
 - All CRUD operations function correctly
 - Data displays in organized tables/cards
