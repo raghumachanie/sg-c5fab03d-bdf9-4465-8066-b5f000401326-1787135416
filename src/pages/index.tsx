@@ -66,15 +66,16 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Right - Hero image placeholder */}
+              {/* Right - Hero image */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                <div className="aspect-[4/3] bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <Users className="h-24 w-24 text-primary/40 mx-auto mb-4" />
-                    <p className="text-muted-foreground font-display italic">
-                      Students learning together in our modern library
-                    </p>
-                  </div>
+                <div className="relative aspect-[4/3]">
+                  <Image
+                    src="/Gemini_Generated_Image_2ijmzj2ijmzj2ijm.png"
+                    alt="Students learning together in our library"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
                 </div>
               </div>
             </div>
