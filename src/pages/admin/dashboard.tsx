@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { checkAuth, signOut } from "@/services/authService";
+import { authService } from "@/services/authService";
 import { getAllNotices, createNotice, updateNotice, deleteNotice } from "@/services/noticeService";
 import { getAllInquiries, updateInquiryStatus } from "@/services/admissionService";
 import { uploadImage, getAllGalleryImages, deleteImage } from "@/services/galleryService";
@@ -52,8 +52,8 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     async function checkAuthentication() {
-      const isAuth = await checkAuth();
-      if (!isAuth) {
+      const user = await authService.getCurrentUser();
+      if (!user) {
         router.push("/admin/login");
         return;
       }
@@ -75,7 +75,7 @@ export default function AdminDashboard() {
   }
 
   async function handleSignOut() {
-    await signOut();
+    await authService.signOut();
     router.push("/admin/login");
   }
 
@@ -83,7 +83,7 @@ export default function AdminDashboard() {
     e.preventDefault();
     const result = editingNotice
       ? await updateNotice(editingNotice, noticeForm)
-      : await createNotice(noticeForm);
+      : await createNotice(noticeForm.title, noticeForm.content, noticeForm.priority);
 
     if (result.success) {
       setNoticeForm({ title: "", content: "", priority: "medium" });

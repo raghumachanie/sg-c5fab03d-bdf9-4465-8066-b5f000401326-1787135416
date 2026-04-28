@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { signIn } from "@/services/authService";
+import { authService } from "@/services/authService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,12 +21,12 @@ export default function AdminLogin() {
     setError("");
     setLoading(true);
 
-    const result = await signIn(email, password);
+    const result = await authService.signIn(email, password);
 
-    if (result.success) {
+    if (result.user) {
       router.push("/admin/dashboard");
     } else {
-      setError(result.error || "Invalid credentials");
+      setError(result.error?.message || "Invalid credentials");
     }
 
     setLoading(false);
