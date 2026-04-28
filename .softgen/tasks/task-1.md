@@ -3,9 +3,12 @@ title: Design system and navigation
 status: done
 priority: urgent
 type: feature
-tags: [design, navigation, fonts]
+tags:
+- design
+- navigation
+- fonts
 created_by: agent
-created_at: 2026-04-28T14:49:57Z
+created_at: 2026-04-28 14:49:57+00:00
 position: 1
 ---
 
