@@ -7,7 +7,6 @@ export async function getLatestNotices(limit: number = 5): Promise<Notice[]> {
   const { data, error } = await supabase
     .from("notices")
     .select("*")
-    .eq("is_active", true)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -23,7 +22,6 @@ export async function getAllNotices(): Promise<Notice[]> {
   const { data, error } = await supabase
     .from("notices")
     .select("*")
-    .eq("is_active", true)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -37,11 +35,11 @@ export async function getAllNotices(): Promise<Notice[]> {
 export async function createNotice(
   title: string,
   content: string,
-  category: string
+  priority: string = "normal"
 ): Promise<{ success: boolean; notice?: Notice; error?: string }> {
   const { data, error } = await supabase
     .from("notices")
-    .insert({ title, content, category, is_active: true })
+    .insert({ title, content, priority })
     .select()
     .single();
 
@@ -55,7 +53,7 @@ export async function createNotice(
 
 export async function updateNotice(
   id: string,
-  updates: Partial<Pick<Notice, "title" | "content" | "category" | "is_active">>
+  updates: Partial<Pick<Notice, "title" | "content" | "priority">>
 ): Promise<{ success: boolean; notice?: Notice; error?: string }> {
   const { data, error } = await supabase
     .from("notices")

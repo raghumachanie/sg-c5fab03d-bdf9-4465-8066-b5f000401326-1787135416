@@ -49,8 +49,8 @@ export function LatestNotices() {
                 <h3 className="font-display text-lg font-semibold text-foreground">
                   {notice.title}
                 </h3>
-                <Badge variant="secondary" className="flex-shrink-0">
-                  {notice.category}
+                <Badge variant={notice.priority === 'urgent' ? 'destructive' : 'secondary'} className="flex-shrink-0 capitalize">
+                  {notice.priority || 'General'}
                 </Badge>
               </div>
               <p className="text-muted-foreground leading-relaxed">
