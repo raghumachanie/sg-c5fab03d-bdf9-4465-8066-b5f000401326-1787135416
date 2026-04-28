@@ -17,9 +17,14 @@ Color palette:
 - `--muted: 180 15% 94%` (pale teal-gray)
 - `--success: 142 71% 45%` (fresh green)
 
-Fonts: Crimson Pro (display, elegant serif), Lora (body, refined serif)
+Fonts:
+- Primary Logo: Playfair Display Bold (700) uppercase
+- Subtitle: Montserrat Medium (500) uppercase, letter-spacing 0.2rem
+- Tagline: Playfair Display Italic
+- Body Text: Inter Regular (400)
+- Headings: Playfair Display Semi-Bold (600)
 
-Style: Professional institutional aesthetic matching logo's sophisticated character. Deep teal + warm gold evoke trust and achievement. Classic serif typography, refined spacing, elevated details. Institutional confidence with warm accessibility for underprivileged families.
+Style: Professional institutional aesthetic matching logo's sophisticated character. Deep teal + warm gold evoke trust and achievement. Classic serif typography for primary elements, clean sans-serif for navigation and body. Refined spacing, elevated details. Institutional confidence with warm accessibility for underprivileged families.
 
 ## Features
 **Public:**

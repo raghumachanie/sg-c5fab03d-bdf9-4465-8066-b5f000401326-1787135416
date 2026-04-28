@@ -36,12 +36,12 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
+                <h1 className="logo-text text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground">
                   Sri Sai Balaji<br />
                   <span className="text-primary">Educational Trust</span>
                 </h1>
                 
-                <p className="font-display text-2xl md:text-3xl text-accent font-medium italic leading-relaxed">
+                <p className="tagline-text text-2xl md:text-3xl text-accent leading-relaxed">
                   Nurturing Minds,<br />Building Futures
                 </p>
                 
@@ -50,13 +50,13 @@ export default function Home() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 font-semibold">
+                  <Button asChild size="lg" className="bg-primary hover:bg-primary/90 font-subtitle font-semibold">
                     <Link href="/admissions">
                       Apply for Admission
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-semibold">
+                  <Button asChild size="lg" variant="outline" className="border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-subtitle font-semibold">
                     <Link href="/donate">Support Our Mission</Link>
                   </Button>
                 </div>
@@ -129,7 +129,7 @@ export default function Home() {
         <section className="py-16 md:py-24 bg-white">
           <div className="container">
             <div className="text-center mb-12">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+              <h2 className="font-display text-3xl md:text-4xl font-semibold text-foreground mb-4">
                 Our Mission
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -175,7 +175,7 @@ export default function Home() {
         <section className="py-16 md:py-24 bg-muted/30">
           <div className="container">
             <div className="text-center mb-12">
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
+              <h2 className="font-display text-3xl md:text-4xl font-semibold text-foreground mb-4">
                 Latest Notices
               </h2>
               <p className="text-muted-foreground">Stay updated with important announcements</p>

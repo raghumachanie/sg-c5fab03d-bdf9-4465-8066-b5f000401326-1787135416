@@ -20,19 +20,19 @@ export function Footer() {
           <div>
             <h3 className="font-display text-lg font-semibold mb-4">Quick Links</h3>
             <nav className="flex flex-col gap-2">
-              <Link href="/about" className="text-sm opacity-90 hover:opacity-100 hover:text-accent transition-colors">
+              <Link href="/about" className="text-sm font-subtitle opacity-90 hover:opacity-100 hover:text-accent transition-colors">
                 About Us
               </Link>
-              <Link href="/academics" className="text-sm opacity-90 hover:opacity-100 hover:text-accent transition-colors">
+              <Link href="/academics" className="text-sm font-subtitle opacity-90 hover:opacity-100 hover:text-accent transition-colors">
                 Academics
               </Link>
-              <Link href="/gallery" className="text-sm opacity-90 hover:opacity-100 hover:text-accent transition-colors">
+              <Link href="/gallery" className="text-sm font-subtitle opacity-90 hover:opacity-100 hover:text-accent transition-colors">
                 Gallery
               </Link>
-              <Link href="/admissions" className="text-sm opacity-90 hover:opacity-100 hover:text-accent transition-colors">
+              <Link href="/admissions" className="text-sm font-subtitle opacity-90 hover:opacity-100 hover:text-accent transition-colors">
                 Admissions
               </Link>
-              <Link href="/contact" className="text-sm opacity-90 hover:opacity-100 hover:text-accent transition-colors">
+              <Link href="/contact" className="text-sm font-subtitle opacity-90 hover:opacity-100 hover:text-accent transition-colors">
                 Contact
               </Link>
             </nav>

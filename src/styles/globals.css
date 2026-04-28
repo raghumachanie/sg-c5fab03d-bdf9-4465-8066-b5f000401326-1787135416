@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -100,5 +100,17 @@
 @layer components {
   .container {
     @apply mx-auto px-4 md:px-6 lg:px-8 max-w-7xl w-full;
+  }
+  
+  .logo-text {
+    @apply font-display font-bold uppercase tracking-tight;
+  }
+  
+  .subtitle-text {
+    @apply font-subtitle font-medium uppercase tracking-[0.2rem];
+  }
+  
+  .tagline-text {
+    @apply font-display italic font-normal;
   }
 }

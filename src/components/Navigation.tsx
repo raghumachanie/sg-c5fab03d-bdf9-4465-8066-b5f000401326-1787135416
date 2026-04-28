@@ -24,13 +24,13 @@ export function Navigation() {
           <div className="flex h-10 items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4" />
-              <span className="font-medium">023 486 8990</span>
+              <span className="font-subtitle font-medium">023 486 8990</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/gallery" className="hover:text-accent transition-colors">
+              <Link href="/gallery" className="font-subtitle font-medium hover:text-accent transition-colors">
                 Blog
               </Link>
-              <Link href="/contact" className="hover:text-accent transition-colors">
+              <Link href="/contact" className="font-subtitle font-medium hover:text-accent transition-colors">
                 Contact Us
               </Link>
             </div>
@@ -52,10 +52,10 @@ export function Navigation() {
                 />
               </div>
               <div className="hidden sm:block">
-                <div className="font-display text-xl font-semibold text-primary leading-tight">
+                <div className="logo-text text-xl text-primary leading-tight">
                   Sri Sai Balaji
                 </div>
-                <div className="font-display text-xs text-muted-foreground uppercase tracking-wide">
+                <div className="subtitle-text text-[0.65rem] text-muted-foreground">
                   Educational Trust
                 </div>
               </div>
@@ -66,12 +66,12 @@ export function Navigation() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm font-medium text-foreground transition-colors hover:text-primary relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent after:transition-all hover:after:w-full"
+                  className="text-sm font-subtitle font-medium text-foreground transition-colors hover:text-primary relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent after:transition-all hover:after:w-full"
                 >
                   {link.label}
                 </Link>
               ))}
-              <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
+              <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-subtitle font-semibold">
                 <Link href="/contact">Contact</Link>
               </Button>
             </div>
@@ -93,7 +93,7 @@ export function Navigation() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-sm font-medium text-foreground hover:text-primary hover:bg-muted transition-colors py-3 px-4 rounded-md"
+                    className="text-sm font-subtitle font-medium text-foreground hover:text-primary hover:bg-muted transition-colors py-3 px-4 rounded-md"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.label}

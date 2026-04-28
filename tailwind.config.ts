@@ -10,8 +10,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Lora", "Georgia", "serif"],
-        display: ["Crimson Pro", "Georgia", "serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        display: ["Playfair Display", "Georgia", "serif"],
+        subtitle: ["Montserrat", "system-ui", "sans-serif"],
       },
       colors: {
         background: "hsl(var(--background))",
