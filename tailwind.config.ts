@@ -6,13 +6,12 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Nunito", "system-ui", "sans-serif"],
-        display: ["Fredoka", "system-ui", "sans-serif"],
+        sans: ["Lora", "Georgia", "serif"],
+        display: ["Crimson Pro", "Georgia", "serif"],
       },
       colors: {
         background: "hsl(var(--background))",
@@ -101,4 +100,5 @@ const config: Config = {
   },
   plugins: [require("tailwindcss-animate")],
 };
+
 export default config;

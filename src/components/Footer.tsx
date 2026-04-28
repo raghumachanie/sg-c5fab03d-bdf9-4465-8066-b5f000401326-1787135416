@@ -5,11 +5,11 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-primary text-primary-foreground border-t border-primary/20">
+    <footer className="bg-primary text-primary-foreground border-t-2 border-accent/30">
       <div className="container py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           <div>
-            <h3 className="font-display text-lg font-semibold mb-4">
+            <h3 className="font-display text-xl font-semibold mb-4">
               Sri Sai Balaji Educational Trust
             </h3>
             <p className="text-sm opacity-90 leading-relaxed">
