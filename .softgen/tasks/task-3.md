@@ -1,6 +1,6 @@
 ---
 title: About Us and Academics pages
-status: todo
+status: done
 priority: high
 type: feature
 tags: [about, academics, content]

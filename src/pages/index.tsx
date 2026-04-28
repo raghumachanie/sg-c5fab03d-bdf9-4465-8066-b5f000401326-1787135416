@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { LatestNotices } from "@/components/LatestNotices";
 import Link from "next/link";
 import { ArrowRight, BookOpen, Heart, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -89,11 +90,7 @@ export default function Home() {
             </div>
 
             <div className="max-w-4xl mx-auto">
-              <Card className="p-8 bg-white border-2 border-accent/20">
-                <p className="text-center text-muted-foreground">
-                  Notice board will be updated soon. Check back for important announcements about admissions, holidays, and events.
-                </p>
-              </Card>
+              <LatestNotices />
             </div>
           </div>
         </section>

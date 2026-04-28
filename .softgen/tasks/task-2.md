@@ -1,6 +1,6 @@
 ---
 title: Homepage with hero and notices
-status: in_progress
+status: done
 priority: high
 type: feature
 tags: [homepage, notices, hero]
@@ -15,7 +15,7 @@ Build homepage with welcoming hero section, mission summary, and dynamic latest 
 ## Checklist
 - [x] Create Hero section with school tagline about affordable quality education
 - [x] Add Our Mission summary section
-- [ ] Create Latest Notices component fetching from notices table
+- [x] Create Latest Notices component fetching from notices table
 - [x] Add Call-to-action buttons for Admissions and Contact
 - [x] Optimize for mobile-first layout
 
