@@ -73,7 +73,7 @@ export default function About() {
                     <h2 className="font-display text-2xl md:text-3xl font-bold text-foreground mb-2">
                       Message from the Principal
                     </h2>
-                    <p className="text-sm text-muted-foreground">Sister [Name]</p>
+                    <p className="text-sm text-muted-foreground">Vani Rumal</p>
                   </div>
                 </div>
                 <div className="space-y-4 text-muted-foreground leading-relaxed">
