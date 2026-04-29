@@ -74,9 +74,6 @@ export function Navigation() {
                   {link.label}
                 </Link>
               ))}
-              <Button asChild size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground font-subtitle font-semibold">
-                <Link href="/contact">Contact</Link>
-              </Button>
             </div>
 
             <Button
