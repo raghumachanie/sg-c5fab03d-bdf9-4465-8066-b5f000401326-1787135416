@@ -8,13 +8,13 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const mainNavLinks = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About Us" },
-    { href: "/academics", label: "Program" },
-    { href: "/academics", label: "Learning" },
-    { href: "/donate", label: "Supports" },
-    { href: "/contact", label: "Contacts" },
-  ];
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About Us" },
+  { href: "/academics", label: "Program" },
+  { href: "/academics", label: "Learning" },
+  { href: "/donate", label: "Supports" },
+  { href: "/contact", label: "Contacts" }];
+
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-card shadow-sm">
@@ -51,12 +51,12 @@ export function Navigation() {
                   src="/logo.jpg"
                   alt="Sri Sai Balaji Educational Trust"
                   fill
-                  className="object-contain"
-                />
+                  className="object-contain" />
+                
               </div>
               <div className="hidden sm:block">
-                <div className="logo-title text-base leading-tight">
-                  Sri Sai Balaji
+                <div className="logo-title text-base leading-tight">SRI BALAJI
+
                 </div>
                 <div className="logo-subtitle text-[10px]">
                   Educational Trust
@@ -65,45 +65,45 @@ export function Navigation() {
             </Link>
 
             <div className="hidden lg:flex lg:items-center lg:gap-8">
-              {mainNavLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm font-subtitle font-medium text-foreground transition-colors hover:text-primary relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent after:transition-all hover:after:w-full"
-                >
+              {mainNavLinks.map((link) =>
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-subtitle font-medium text-foreground transition-colors hover:text-primary relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent after:transition-all hover:after:w-full">
+                
                   {link.label}
                 </Link>
-              ))}
+              )}
             </div>
 
             <Button
               variant="ghost"
               size="icon"
               className="lg:hidden text-foreground hover:bg-muted"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+              
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
 
-          {mobileMenuOpen && (
-            <div className="pb-6 lg:hidden border-t border-border/50">
+          {mobileMenuOpen &&
+          <div className="pb-6 lg:hidden border-t border-border/50">
               <div className="flex flex-col gap-1 pt-4">
-                {mainNavLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-sm font-subtitle font-medium text-foreground hover:text-primary hover:bg-muted transition-colors py-3 px-4 rounded-md"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                {mainNavLinks.map((link) =>
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-subtitle font-medium text-foreground hover:text-primary hover:bg-muted transition-colors py-3 px-4 rounded-md"
+                onClick={() => setMobileMenuOpen(false)}>
+                
                     {link.label}
                   </Link>
-                ))}
+              )}
               </div>
             </div>
-          )}
+          }
         </div>
       </div>
-    </nav>
-  );
+    </nav>);
+
 }
