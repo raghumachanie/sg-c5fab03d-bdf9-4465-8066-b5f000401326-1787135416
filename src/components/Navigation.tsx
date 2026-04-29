@@ -33,6 +33,9 @@ export function Navigation() {
               <Link href="/contact" className="font-subtitle font-medium hover:text-accent transition-colors">
                 Contact Us
               </Link>
+              <Link href="/admin/login" className="font-subtitle font-medium hover:text-accent transition-colors">
+                Admin
+              </Link>
             </div>
           </div>
         </div>
