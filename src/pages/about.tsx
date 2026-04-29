@@ -132,6 +132,6 @@ export default function About() {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>);
+
 }
