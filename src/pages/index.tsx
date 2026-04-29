@@ -31,14 +31,14 @@ export default function Home() {
                       alt="Sri Sai Balaji Educational Trust"
                       fill
                       className="object-contain"
-                      priority
-                    />
+                      priority />
+                    
                   </div>
                 </div>
                 
                 <div>
-                  <h1 className="logo-title text-4xl md:text-5xl lg:text-6xl mb-2">
-                    Sri Sai Balaji
+                  <h1 className="logo-title text-4xl md:text-5xl lg:text-6xl mb-2" style={{ fontStyle: "normal", textDecoration: "none" }}>SRI BALAJI
+
                   </h1>
                   <p className="logo-subtitle text-sm md:text-base">
                     Educational Trust
@@ -74,8 +74,8 @@ export default function Home() {
                     alt="Students learning together in our library"
                     fill
                     className="object-cover"
-                    priority
-                  />
+                    priority />
+                  
                 </div>
               </div>
             </div>
@@ -194,6 +194,6 @@ export default function Home() {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>);
+
 }
