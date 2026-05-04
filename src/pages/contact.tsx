@@ -15,7 +15,7 @@ export default function Contact() {
     email: "",
     phone: "",
     subject: "",
-    message: "",
+    message: ""
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -33,7 +33,7 @@ export default function Contact() {
         email: "",
         phone: "",
         subject: "",
-        message: "",
+        message: ""
       });
     }
 
@@ -101,8 +101,8 @@ export default function Contact() {
                   Send Us a Message
                 </h2>
 
-                {submitted ? (
-                  <Card className="p-8 text-center bg-success/10 border-success">
+                {submitted ?
+                <Card className="p-8 text-center bg-success/10 border-success">
                     <CheckCircle2 className="h-12 w-12 text-success mx-auto mb-4" />
                     <h3 className="font-display text-2xl font-semibold text-success mb-2">
                       Message Sent!
@@ -111,103 +111,103 @@ export default function Contact() {
                       Thank you for contacting us. We will respond soon.
                     </p>
                     <Button
-                      onClick={() => setSubmitted(false)}
-                      variant="outline"
-                      className="mt-6"
-                    >
+                    onClick={() => setSubmitted(false)}
+                    variant="outline"
+                    className="mt-6">
+                    
                       Send Another Message
                     </Button>
-                  </Card>
-                ) : (
-                  <Card className="p-8">
+                  </Card> :
+
+                <Card className="p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="space-y-2">
                         <Label htmlFor="name">Your Name *</Label>
                         <Input
-                          id="name"
-                          required
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          placeholder="Full name"
-                        />
+                        id="name"
+                        required
+                        value={formData.name}
+                        onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                        }
+                        placeholder="Full name" />
+                      
                       </div>
 
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <Label htmlFor="email">Email *</Label>
                           <Input
-                            id="email"
-                            type="email"
-                            required
-                            value={formData.email}
-                            onChange={(e) =>
-                              setFormData({ ...formData, email: e.target.value })
-                            }
-                            placeholder="your@email.com"
-                          />
+                          id="email"
+                          type="email"
+                          required
+                          value={formData.email}
+                          onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                          }
+                          placeholder="your@email.com" />
+                        
                         </div>
 
                         <div className="space-y-2">
                           <Label htmlFor="phone">Phone (Optional)</Label>
                           <Input
-                            id="phone"
-                            type="tel"
-                            value={formData.phone}
-                            onChange={(e) =>
-                              setFormData({ ...formData, phone: e.target.value })
-                            }
-                            placeholder="10-digit number"
-                          />
+                          id="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) =>
+                          setFormData({ ...formData, phone: e.target.value })
+                          }
+                          placeholder="10-digit number" />
+                        
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="subject">Subject *</Label>
                         <Input
-                          id="subject"
-                          required
-                          value={formData.subject}
-                          onChange={(e) =>
-                            setFormData({ ...formData, subject: e.target.value })
-                          }
-                          placeholder="How can we help?"
-                        />
+                        id="subject"
+                        required
+                        value={formData.subject}
+                        onChange={(e) =>
+                        setFormData({ ...formData, subject: e.target.value })
+                        }
+                        placeholder="How can we help?" />
+                      
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="message">Message *</Label>
                         <Textarea
-                          id="message"
-                          rows={6}
-                          required
-                          value={formData.message}
-                          onChange={(e) =>
-                            setFormData({ ...formData, message: e.target.value })
-                          }
-                          placeholder="Your message..."
-                        />
+                        id="message"
+                        rows={6}
+                        required
+                        value={formData.message}
+                        onChange={(e) =>
+                        setFormData({ ...formData, message: e.target.value })
+                        }
+                        placeholder="Your message..." />
+                      
                       </div>
 
                       <Button
-                        type="submit"
-                        size="lg"
-                        className="w-full"
-                        disabled={submitting}
-                      >
-                        {submitting ? (
-                          "Sending..."
-                        ) : (
-                          <>
+                      type="submit"
+                      size="lg"
+                      className="w-full"
+                      disabled={submitting}>
+                      
+                        {submitting ?
+                      "Sending..." :
+
+                      <>
                             <Send className="h-5 w-5 mr-2" />
                             Send Message
                           </>
-                        )}
+                      }
                       </Button>
                     </form>
                   </Card>
-                )}
+                }
               </div>
 
               <div>
@@ -222,8 +222,8 @@ export default function Contact() {
                     style={{ border: 0 }}
                     allowFullScreen
                     loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                  ></iframe>
+                    referrerPolicy="no-referrer-when-downgrade">
+                  </iframe>
                 </Card>
                 <Card className="p-6 mt-6">
                   <h3 className="font-display text-xl font-semibold mb-4">
@@ -242,6 +242,6 @@ export default function Contact() {
       </main>
 
       <Footer />
-    </div>
-  );
+    </div>);
+
 }
