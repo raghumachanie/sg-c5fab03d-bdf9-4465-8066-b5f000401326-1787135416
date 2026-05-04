@@ -24,7 +24,7 @@ export function Navigation() {
           <div className="flex h-10 items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4" />
-              <span className="font-subtitle font-medium">023 486 8990</span>
+              <span className="font-subtitle font-medium">+918861949711</span>
             </div>
             <div className="hidden md:flex items-center gap-6">
               <Link href="/gallery" className="font-subtitle font-medium hover:text-accent transition-colors">
