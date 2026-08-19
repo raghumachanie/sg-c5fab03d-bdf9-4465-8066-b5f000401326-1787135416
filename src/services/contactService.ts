@@ -37,3 +37,16 @@ export async function createMessage(message: {
 
   return { success: true, message: data };
 }
+
+export async function updateMessageStatus(
+  id: string,
+  status: "new" | "read" | "replied",
+): Promise<{ success: boolean; error?: string }> {
+  const { error } = await supabase
+    .from("contact_messages")
+    .update({ status })
+    .eq("id", id);
+
+  return error ? { success: false, error: error.message } : { success: true };
+}
+
