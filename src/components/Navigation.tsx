@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Menu, Phone, X } from "lucide-react";
+import { LockKeyhole, Menu, Phone, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
@@ -26,7 +26,12 @@ export function Navigation() {
             <Phone aria-hidden="true" className="h-4 w-4" />
             <span>+91 88619 49711</span>
           </a>
-          <p className="hidden text-xs opacity-90 sm:block">Education with care, opportunity and purpose</p>
+          <div className="flex items-center gap-4">
+            <p className="hidden text-xs opacity-90 md:block">Education with care, opportunity and purpose</p>
+            <Link href="/admin/login" className="inline-flex items-center gap-1.5 text-xs font-semibold hover:text-accent sm:text-sm">
+              <LockKeyhole aria-hidden="true" className="h-3.5 w-3.5" /> Admin login
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -67,6 +72,7 @@ export function Navigation() {
             {navLinks.map((link) => (
               <Link key={link.href} href={link.href} className="rounded-lg px-4 py-3 font-semibold hover:bg-muted" onClick={() => setMobileMenuOpen(false)}>{link.label}</Link>
             ))}
+            <Link href="/admin/login" className="rounded-lg px-4 py-3 font-semibold hover:bg-muted" onClick={() => setMobileMenuOpen(false)}>Admin login</Link>
             <Link href="/donate" className="mt-2 rounded-lg bg-accent px-4 py-3 text-center font-bold text-accent-foreground" onClick={() => setMobileMenuOpen(false)}>Support our mission</Link>
           </div>
         </nav>
