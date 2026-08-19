@@ -46,7 +46,7 @@ export default function Home() {
             <div className="relative">
               <div className="absolute -left-8 -top-8 h-40 w-40 rounded-full bg-accent/20 blur-3xl" aria-hidden="true" />
               <div className="relative overflow-hidden rounded-[2rem] border-8 border-white bg-white shadow-2xl">
-                <div className="relative aspect-[4/3]"><Image src="/Gemini_Generated_Image_2ijmzj2ijmzj2ijm.png" alt="Children learning together at Sri Balaji Educational Trust" fill sizes="(max-width: 1024px) 100vw, 45vw" className="object-cover" priority /></div>
+                <div className="relative aspect-[4/3]"><Image src="/hero-vivid-4k.jpg" alt="Children learning together at Sri Balaji Educational Trust" fill sizes="(max-width: 1024px) 100vw, 45vw" className="object-cover object-center contrast-[1.04] saturate-[1.08]" quality={95} priority /></div>
               </div>
               <div className="absolute -bottom-5 left-5 right-5 rounded-2xl bg-primary p-5 text-primary-foreground shadow-xl sm:left-auto sm:w-72">
                 <p className="font-display text-xl font-semibold">Nurturing minds</p><p className="mt-1 text-sm opacity-85">Building capable, compassionate learners for tomorrow.</p>

@@ -13,27 +13,27 @@
 @layer base {
   :root {
     --radius: 0.5rem;
-    --background: 45 45% 96%;
-    --foreground: 180 25% 25%;
+    --background: 46 100% 98%;
+    --foreground: 208 72% 15%;
     --card: 0 0% 100%;
-    --card-foreground: 180 25% 25%;
+    --card-foreground: 208 72% 15%;
     --popover: 0 0% 100%;
-    --popover-foreground: 180 25% 25%;
-    --primary: 180 56% 24%;
-    --primary-foreground: 45 45% 96%;
-    --secondary: 180 20% 92%;
-    --secondary-foreground: 180 25% 25%;
-    --muted: 180 15% 94%;
-    --muted-foreground: 180 15% 45%;
-    --accent: 42 51% 58%;
-    --accent-foreground: 180 25% 25%;
-    --success: 142 71% 45%;
+    --popover-foreground: 208 72% 15%;
+    --primary: 182 78% 25%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 187 67% 92%;
+    --secondary-foreground: 208 72% 15%;
+    --muted: 45 58% 94%;
+    --muted-foreground: 205 28% 35%;
+    --accent: 39 88% 58%;
+    --accent-foreground: 208 72% 15%;
+    --success: 145 72% 36%;
     --success-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 180 15% 88%;
-    --input: 180 15% 88%;
-    --ring: 180 56% 24%;
+    --border: 184 30% 82%;
+    --input: 184 30% 82%;
+    --ring: 182 78% 25%;
     --chart-1: 180 56% 24%;
     --chart-2: 42 51% 58%;
     --chart-3: 142 71% 45%;
@@ -96,6 +96,15 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
+  }
+
+  a, button, input, textarea, select {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
 
   ::selection {
@@ -117,7 +126,12 @@
   }
 
   .section-kicker {
-    @apply text-xs font-bold uppercase tracking-[0.18em] text-primary;
+    @apply text-xs font-extrabold uppercase tracking-[0.18em] text-primary;
+  }
+
+  .shadow-xl, .shadow-2xl {
+    --tw-shadow-color: hsl(var(--primary) / 0.18);
+    --tw-shadow: var(--tw-shadow-colored);
   }
   
   /* Logo Title */
