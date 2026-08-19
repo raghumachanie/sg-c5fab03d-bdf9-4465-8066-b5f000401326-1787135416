@@ -1,533 +1,61 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { authService } from "@/services/authService";
-import { getAllNotices, createNotice, updateNotice, deleteNotice } from "@/services/noticeService";
-import { getAllInquiries, updateInquiryStatus } from "@/services/admissionService";
-import { uploadImage, getAllGalleryImages, deleteImage } from "@/services/galleryService";
-import { getAllDonations, updateDonationStatus, deleteDonation } from "@/services/donationService";
-import type { Notice } from "@/services/noticeService";
-import type { AdmissionInquiry } from "@/services/admissionService";
-import type { GalleryImage } from "@/services/galleryService";
-import type { Donation } from "@/services/donationService";
+import { getAllNotices, createNotice, deleteNotice, type Notice } from "@/services/noticeService";
+import { getAllInquiries, updateInquiryStatus, type AdmissionInquiry } from "@/services/admissionService";
+import { getAllMessages, updateMessageStatus, type ContactMessage } from "@/services/contactService";
+import { uploadImage, getAllGalleryImages, deleteImage, type GalleryImage } from "@/services/galleryService";
+import { getAllDonations, updateDonationStatus, type Donation } from "@/services/donationService";
+import { createResource, deleteResource, getAllResources, updateResource, type SchoolResource } from "@/services/resourceService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Bell,
-  Users,
-  Image as ImageIcon,
-  LogOut,
-  Plus,
-  Edit,
-  Trash2,
-  Check,
-  X,
-  Heart,
-} from "lucide-react";
+import { BarChart3, Bell, Check, ExternalLink, FileText, Heart, Image as ImageIcon, Inbox, LayoutDashboard, LogOut, Mail, Plus, RefreshCw, Search, Trash2, Users } from "lucide-react";
+
+const fmt = (v: string | null) => v ? new Date(v).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—";
+const tone = (s?: string | null) => ["new","pending","urgent"].includes(s || "") ? "bg-amber-100 text-amber-800" : ["received","contacted","replied","admitted","published"].includes(s || "") ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-700";
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [notices, setNotices] = useState<Notice[]>([]);
-  const [inquiries, setInquiries] = useState<AdmissionInquiry[]>([]);
-  const [galleryImages, setGalleryImages] = useState<GalleryImage[]>([]);
-  const [donations, setDonations] = useState<Donation[]>([]);
-  const [activeTab, setActiveTab] = useState("notices");
+  const [loading, setLoading] = useState(true), [refreshing, setRefreshing] = useState(false), [query, setQuery] = useState("");
+  const [notices, setNotices] = useState<Notice[]>([]), [inquiries, setInquiries] = useState<AdmissionInquiry[]>([]), [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [images, setImages] = useState<GalleryImage[]>([]), [donations, setDonations] = useState<Donation[]>([]), [resources, setResources] = useState<SchoolResource[]>([]);
+  const [notice, setNotice] = useState({title:"",content:"",priority:"medium"}), [resource, setResource] = useState({title:"",description:"",url:"",category:"general",audience:"all",is_published:true});
+  const [category, setCategory] = useState("events"), [uploading, setUploading] = useState(false);
 
-  const [noticeForm, setNoticeForm] = useState({
-    title: "",
-    content: "",
-    priority: "medium" as "urgent" | "high" | "medium" | "low",
-  });
-  const [editingNotice, setEditingNotice] = useState<string | null>(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const [imageCategory, setImageCategory] = useState("events");
+  async function load(spin=false) { if(spin)setRefreshing(true); const [a,b,c,d,e,f]=await Promise.all([getAllNotices(),getAllInquiries(),getAllMessages(),getAllGalleryImages(),getAllDonations(),getAllResources()]); setNotices(a);setInquiries(b);setMessages(c);setImages(d);setDonations(e);setResources(f);setRefreshing(false); }
+  useEffect(()=>{(async()=>{if(!await authService.getCurrentUser()) return void router.replace("/admin/login");await load();setLoading(false)})()},[router]);
+  const open=inquiries.filter(i=>!["admitted","declined"].includes(i.status||"new")).length, unread=messages.filter(m=>(m.status||"new")==="new").length, pending=donations.filter(d=>(d.status||"pending")==="pending").length;
+  const iq=useMemo(()=>inquiries.filter(i=>[i.student_name,i.parent_name,i.phone,i.email,i.class_applying].some(v=>v?.toLowerCase().includes(query.toLowerCase()))),[inquiries,query]);
+  const mq=useMemo(()=>messages.filter(m=>[m.name,m.email,m.phone,m.subject].some(v=>v?.toLowerCase().includes(query.toLowerCase()))),[messages,query]);
+  async function upload(e:React.ChangeEvent<HTMLInputElement>){const f=e.target.files?.[0];if(!f)return;setUploading(true);if((await uploadImage(f,category)).success)await load();setUploading(false);e.target.value=""}
+  async function remove(label:string,action:()=>Promise<unknown>){if(confirm(`Delete this ${label}?`)){await action();await load()}}
+  if(loading)return <div className="min-h-screen grid place-items-center bg-slate-50 text-slate-500">Opening operations portal…</div>;
 
-  useEffect(() => {
-    async function checkAuthentication() {
-      const user = await authService.getCurrentUser();
-      if (!user) {
-        router.push("/admin/login");
-        return;
-      }
-      await loadData();
-      setLoading(false);
-    }
-    checkAuthentication();
-  }, [router]);
-
-  async function loadData() {
-    const [noticesData, inquiriesData, imagesData, donationsData] = await Promise.all([
-      getAllNotices(),
-      getAllInquiries(),
-      getAllGalleryImages(),
-      getAllDonations(),
-    ]);
-    setNotices(noticesData);
-    setInquiries(inquiriesData);
-    setGalleryImages(imagesData);
-    setDonations(donationsData);
-  }
-
-  async function handleSignOut() {
-    await authService.signOut();
-    router.push("/admin/login");
-  }
-
-  async function handleNoticeSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const result = editingNotice
-      ? await updateNotice(editingNotice, noticeForm)
-      : await createNotice(noticeForm.title, noticeForm.content, noticeForm.priority);
-
-    if (result.success) {
-      setNoticeForm({ title: "", content: "", priority: "medium" });
-      setEditingNotice(null);
-      await loadData();
-    }
-  }
-
-  async function handleDeleteNotice(id: string) {
-    if (confirm("Delete this notice?")) {
-      await deleteNotice(id);
-      await loadData();
-    }
-  }
-
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploadingImage(true);
-    const result = await uploadImage(file, imageCategory);
-    if (result.success) {
-      await loadData();
-    }
-    setUploadingImage(false);
-    e.target.value = "";
-  }
-
-  async function handleDeleteImage(id: string, imageUrl: string) {
-    if (confirm("Delete this image?")) {
-      await deleteImage(id, imageUrl);
-      await loadData();
-    }
-  }
-
-  async function handleInquiryStatus(id: string, status: string) {
-    await updateInquiryStatus(id, status);
-    await loadData();
-  }
-
-  async function handleDonationStatus(id: string, status: string) {
-    await updateDonationStatus(id, status);
-    await loadData();
-  }
-
-  async function handleDeleteDonation(id: string) {
-    if (confirm("Delete this donation record?")) {
-      await deleteDonation(id);
-      await loadData();
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-muted-foreground">Loading dashboard...</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="font-display text-2xl font-bold">Admin Dashboard</h1>
-        </div>
-        <Button onClick={handleSignOut} variant="secondary" size="sm">
-          <LogOut className="h-4 w-4 mr-2" />
-          Sign Out
-        </Button>
-      </header>
-
-      <main className="container py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="notices" className="gap-2">
-              <Bell className="h-4 w-4" />
-              Notices ({notices.length})
-            </TabsTrigger>
-            <TabsTrigger value="inquiries" className="gap-2">
-              <Users className="h-4 w-4" />
-              Inquiries ({inquiries.length})
-            </TabsTrigger>
-            <TabsTrigger value="donations" className="gap-2">
-              <Heart className="h-4 w-4" />
-              Donations ({donations.length})
-            </TabsTrigger>
-            <TabsTrigger value="gallery" className="gap-2">
-              <ImageIcon className="h-4 w-4" />
-              Gallery ({galleryImages.length})
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="notices" className="space-y-6">
-            <Card className="p-6">
-              <h2 className="font-display text-xl font-semibold mb-4">
-                {editingNotice ? "Edit Notice" : "Create New Notice"}
-              </h2>
-              <form onSubmit={handleNoticeSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
-                  <Input
-                    id="title"
-                    required
-                    value={noticeForm.title}
-                    onChange={(e) =>
-                      setNoticeForm({ ...noticeForm, title: e.target.value })
-                    }
-                    placeholder="Notice title"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="content">Content</Label>
-                  <Textarea
-                    id="content"
-                    required
-                    rows={4}
-                    value={noticeForm.content}
-                    onChange={(e) =>
-                      setNoticeForm({ ...noticeForm, content: e.target.value })
-                    }
-                    placeholder="Notice details"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="priority">Priority</Label>
-                  <Select
-                    value={noticeForm.priority}
-                    onValueChange={(value) =>
-                      setNoticeForm({
-                        ...noticeForm,
-                        priority: value as "urgent" | "high" | "medium" | "low",
-                      })
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="urgent">Urgent</SelectItem>
-                      <SelectItem value="high">High</SelectItem>
-                      <SelectItem value="medium">Medium</SelectItem>
-                      <SelectItem value="low">Low</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button type="submit">
-                    <Plus className="h-4 w-4 mr-2" />
-                    {editingNotice ? "Update" : "Create"} Notice
-                  </Button>
-                  {editingNotice && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setEditingNotice(null);
-                        setNoticeForm({ title: "", content: "", priority: "medium" });
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  )}
-                </div>
-              </form>
-            </Card>
-
-            <div className="space-y-4">
-              {notices.map((notice) => (
-                <Card key={notice.id} className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-display text-lg font-semibold">
-                          {notice.title}
-                        </h3>
-                        <span
-                          className={`text-xs px-2 py-1 rounded-full ${
-                            notice.priority === "urgent"
-                              ? "bg-destructive/20 text-destructive"
-                              : notice.priority === "high"
-                              ? "bg-accent/20 text-accent"
-                              : "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          {notice.priority}
-                        </span>
-                      </div>
-                      <p className="text-muted-foreground">{notice.content}</p>
-                      <p className="text-xs text-muted-foreground mt-2">
-                        {new Date(notice.created_at || "").toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          setEditingNotice(notice.id);
-                          setNoticeForm({
-                            title: notice.title,
-                            content: notice.content,
-                            priority: notice.priority as "urgent" | "high" | "medium" | "low",
-                          });
-                        }}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDeleteNotice(notice.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="inquiries" className="space-y-4">
-            {inquiries.length === 0 ? (
-              <Alert>
-                <AlertDescription>No admission inquiries yet</AlertDescription>
-              </Alert>
-            ) : (
-              inquiries.map((inquiry) => (
-                <Card key={inquiry.id} className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-display text-lg font-semibold">
-                          {inquiry.student_name}
-                        </h3>
-                        <span
-                          className={`text-xs px-2 py-1 rounded-full ${
-                            inquiry.status === "contacted"
-                              ? "bg-success/20 text-success"
-                              : inquiry.status === "pending"
-                              ? "bg-accent/20 text-accent"
-                              : "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          {inquiry.status}
-                        </span>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        <p>
-                          <strong>Parent:</strong> {inquiry.parent_name}
-                        </p>
-                        <p>
-                          <strong>Phone:</strong> {inquiry.phone}
-                        </p>
-                        {inquiry.email && (
-                          <p>
-                            <strong>Email:</strong> {inquiry.email}
-                          </p>
-                        )}
-                        <p>
-                          <strong>Class:</strong> {inquiry.class_applying}
-                        </p>
-                        {inquiry.message && (
-                          <p className="mt-2">
-                            <strong>Message:</strong> {inquiry.message}
-                          </p>
-                        )}
-                        <p className="text-xs mt-2">
-                          {new Date(inquiry.created_at || "").toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleInquiryStatus(inquiry.id, "contacted")}
-                      >
-                        <Check className="h-4 w-4 mr-1" />
-                        Contacted
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleInquiryStatus(inquiry.id, "pending")}
-                      >
-                        <X className="h-4 w-4 mr-1" />
-                        Pending
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))
-            )}
-          </TabsContent>
-
-          <TabsContent value="donations" className="space-y-4">
-            {donations.length === 0 ? (
-              <Alert>
-                <AlertDescription>No donations yet</AlertDescription>
-              </Alert>
-            ) : (
-              donations.map((donation) => (
-                <Card key={donation.id} className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-display text-lg font-semibold">
-                          {donation.donor_name}
-                        </h3>
-                        <span
-                          className={`text-xs px-2 py-1 rounded-full ${
-                            donation.status === "received"
-                              ? "bg-success/20 text-success"
-                              : donation.status === "pending"
-                              ? "bg-accent/20 text-accent"
-                              : "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          {donation.status}
-                        </span>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        <p>
-                          <strong>Phone:</strong> {donation.phone}
-                        </p>
-                        {donation.email && (
-                          <p>
-                            <strong>Email:</strong> {donation.email}
-                          </p>
-                        )}
-                        {donation.amount && (
-                          <p>
-                            <strong>Amount:</strong> ₹{donation.amount.toLocaleString()}
-                          </p>
-                        )}
-                        <p>
-                          <strong>Purpose:</strong> {donation.purpose}
-                        </p>
-                        {donation.message && (
-                          <p className="mt-2">
-                            <strong>Message:</strong> {donation.message}
-                          </p>
-                        )}
-                        <p className="text-xs mt-2">
-                          {new Date(donation.created_at || "").toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDonationStatus(donation.id, "received")}
-                      >
-                        <Check className="h-4 w-4 mr-1" />
-                        Received
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDeleteDonation(donation.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              ))
-            )}
-          </TabsContent>
-
-          <TabsContent value="gallery" className="space-y-6">
-            <Card className="p-6">
-              <h2 className="font-display text-xl font-semibold mb-4">Upload Image</h2>
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <Label htmlFor="category">Category</Label>
-                  <Select value={imageCategory} onValueChange={setImageCategory}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="events">Events</SelectItem>
-                      <SelectItem value="classroom">Classroom</SelectItem>
-                      <SelectItem value="activities">Activities</SelectItem>
-                      <SelectItem value="achievements">Achievements</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="flex-1">
-                  <Label htmlFor="image">Image File</Label>
-                  <Input
-                    id="image"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    disabled={uploadingImage}
-                  />
-                </div>
-              </div>
-              {uploadingImage && (
-                <p className="text-sm text-muted-foreground mt-2">Uploading...</p>
-              )}
-            </Card>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {galleryImages.map((image) => (
-                <Card key={image.id} className="overflow-hidden">
-                  <div className="relative aspect-square">
-                    <img
-                      src={image.image_url}
-                      alt={image.description || "Gallery"}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-3 space-y-2">
-                    <p className="text-xs text-muted-foreground">{image.category}</p>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="w-full"
-                      onClick={() => handleDeleteImage(image.id, image.image_url)}
-                    >
-                      <Trash2 className="h-3 w-3 mr-1" />
-                      Delete
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </main>
-    </div>
-  );
+  const nav = [["overview","Overview",LayoutDashboard],["admissions","Admissions",Users],["messages","Messages",Inbox],["notices","Notice board",Bell],["resources","Forms & links",FileText],["gallery","Gallery",ImageIcon],["donations","Donations",Heart]] as Array<[string,string,React.ElementType]>;
+  return <div className="min-h-screen bg-slate-50"><header className="border-b bg-[#073b4c] text-white"><div className="container flex flex-wrap items-center justify-between gap-4 py-5"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-amber-300">Sri Balaji Education</p><h1 className="mt-1 text-2xl font-bold">School Operations Portal</h1><p className="text-sm text-white/70">Admissions, communication and website content in one place</p></div><div className="flex gap-2"><Button asChild variant="secondary" size="sm"><Link href="/" target="_blank">Website <ExternalLink className="ml-2 h-4 w-4"/></Link></Button><Button variant="outline" size="sm" className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white" onClick={()=>load(true)}><RefreshCw className={`mr-2 h-4 w-4 ${refreshing?"animate-spin":""}`}/>Refresh</Button><Button variant="secondary" size="sm" onClick={async()=>{await authService.signOut();router.push("/admin/login")}}><LogOut className="mr-2 h-4 w-4"/>Sign out</Button></div></div></header>
+  <main className="container py-7"><section className="mb-7 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{([["Open admissions",open,Users,"Needs follow-up"],["New messages",unread,Mail,"From contact form"],["Pending donations",pending,Heart,"Awaiting confirmation"],["Published content",notices.length+images.length+resources.filter(r=>r.is_published).length,BarChart3,"Notices, images & links"]] as Array<[string,number,React.ElementType,string]>).map(([l,v,I,h])=><Card key={l} className="border-0 p-5 shadow-sm"><div className="flex justify-between"><div><p className="text-sm text-slate-500">{l}</p><p className="mt-2 text-3xl font-bold">{v}</p><p className="text-xs text-slate-500">{h}</p></div><span className="h-fit rounded-xl bg-primary/10 p-3 text-primary"><I className="h-5 w-5"/></span></div></Card>)}</section>
+  <Tabs defaultValue="overview"><TabsList className="mb-6 h-auto w-full justify-start gap-1 overflow-x-auto rounded-xl bg-white p-2 shadow-sm">{nav.map(([v,l,I])=><TabsTrigger key={v} value={v} className="gap-2 whitespace-nowrap"><I className="h-4 w-4"/>{l}</TabsTrigger>)}</TabsList>
+  <TabsContent value="overview" className="grid gap-6 lg:grid-cols-2"><Card className="p-6"><h2 className="text-xl font-bold">Today’s work queue</h2><p className="text-sm text-slate-500">Items that need attention from the school office.</p><div className="mt-5 space-y-3">{([[`${open} admission inquiries`,"Contact parents and update progress",Users],[`${unread} unread messages`,"Reply to visitor questions",Mail],[`${pending} pending donations`,"Verify and mark received",Heart]] as Array<[string,string,React.ElementType]>).map(([t,d,I])=><div key={t} className="flex items-center gap-4 rounded-xl border p-4"><span className="rounded-lg bg-primary/10 p-2 text-primary"><I className="h-5 w-5"/></span><span><b className="block">{t}</b><small className="text-slate-500">{d}</small></span></div>)}</div></Card><Card className="p-6"><h2 className="text-xl font-bold">Website publishing</h2><p className="text-sm text-slate-500">Live content managed by the office.</p><div className="mt-5 space-y-4">{[["Notices",notices.length],["Gallery images",images.length],["Forms and links",resources.filter(r=>r.is_published).length]].map(([l,v])=><div key={String(l)} className="flex justify-between border-b pb-4"><span>{String(l)}</span><b className="text-xl">{String(v)}</b></div>)}</div></Card></TabsContent>
+  <TabsContent value="admissions" className="space-y-4"><SearchBox value={query} set={setQuery} text="Search student, parent, phone or class"/>{iq.length?iq.map(i=><Record key={i.id} title={i.student_name} status={i.status} when={i.created_at}><p><b>Parent:</b> {i.parent_name} · <b>Class:</b> {i.class_applying}</p><p><a href={`tel:${i.phone}`} className="text-primary">{i.phone}</a>{i.email&&<> · <a href={`mailto:${i.email}`} className="text-primary">{i.email}</a></>}</p>{i.message&&<p className="mt-2 rounded-lg bg-slate-50 p-3">{i.message}</p>}<Actions values={["new","contacted","admitted","declined"]} current={i.status} run={async s=>{await updateInquiryStatus(i.id,s);await load()}}/></Record>):<Empty text="No admission inquiries found."/>}</TabsContent>
+  <TabsContent value="messages" className="space-y-4"><SearchBox value={query} set={setQuery} text="Search sender, subject, email or phone"/>{mq.length?mq.map(m=><Record key={m.id} title={m.name} status={m.status} when={m.created_at}><b>{m.subject||"General enquiry"}</b><p><a href={`mailto:${m.email}`} className="text-primary">{m.email}</a>{m.phone&&<> · <a href={`tel:${m.phone}`} className="text-primary">{m.phone}</a></>}</p><p className="mt-2 rounded-lg bg-slate-50 p-3">{m.message}</p><Actions values={["new","read","replied"]} current={m.status} run={async s=>{await updateMessageStatus(m.id,s as "new"|"read"|"replied");await load()}}/></Record>):<Empty text="No contact messages found."/>}</TabsContent>
+  <TabsContent value="notices" className="grid gap-6 lg:grid-cols-[.8fr_1.2fr]"><Card className="h-fit p-6"><h2 className="text-xl font-bold">Publish a notice</h2><form className="mt-5 space-y-4" onSubmit={async e=>{e.preventDefault();if((await createNotice(notice.title,notice.content,notice.priority as "urgent"|"high"|"medium"|"low")).success){setNotice({title:"",content:"",priority:"medium"});await load()}}}><Field label="Title"><Input required value={notice.title} onChange={e=>setNotice({...notice,title:e.target.value})}/></Field><Field label="Message"><Textarea required rows={5} value={notice.content} onChange={e=>setNotice({...notice,content:e.target.value})}/></Field><Field label="Priority"><Select value={notice.priority} onValueChange={v=>setNotice({...notice,priority:v})}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{["urgent","high","medium","low"].map(v=><SelectItem key={v} value={v}>{v}</SelectItem>)}</SelectContent></Select></Field><Button><Plus className="mr-2 h-4 w-4"/>Publish</Button></form></Card><div className="space-y-4">{notices.map(n=><Record key={n.id} title={n.title} status={n.priority} when={n.created_at}><p>{n.content}</p><Button className="mt-4" size="sm" variant="destructive" onClick={()=>remove("notice",()=>deleteNotice(n.id))}><Trash2 className="h-4 w-4"/></Button></Record>)}</div></TabsContent>
+  <TabsContent value="resources" className="grid gap-6 lg:grid-cols-[.8fr_1.2fr]"><Card className="h-fit p-6"><h2 className="text-xl font-bold">Add a form or link</h2><p className="text-sm text-slate-500">Admissions, fees, certificates and parent resources.</p><form className="mt-5 space-y-4" onSubmit={async e=>{e.preventDefault();if((await createResource(resource)).success){setResource({title:"",description:"",url:"",category:"general",audience:"all",is_published:true});await load()}}}><Field label="Title"><Input required value={resource.title} onChange={e=>setResource({...resource,title:e.target.value})}/></Field><Field label="Web address"><Input required type="url" placeholder="https://…" value={resource.url} onChange={e=>setResource({...resource,url:e.target.value})}/></Field><Field label="Description"><Textarea value={resource.description} onChange={e=>setResource({...resource,description:e.target.value})}/></Field><div className="grid grid-cols-2 gap-3"><Pick label="Category" value={resource.category} values={["general","admission","fees","academic","certificate"]} run={v=>setResource({...resource,category:v})}/><Pick label="Audience" value={resource.audience} values={["all","parents","students","staff"]} run={v=>setResource({...resource,audience:v})}/></div><Button><Plus className="mr-2 h-4 w-4"/>Add resource</Button></form></Card><div className="space-y-4">{resources.length?resources.map(r=><Record key={r.id} title={r.title} status={r.is_published?"published":"draft"} when={r.created_at}><p>{r.description||"No description"}</p><p className="text-xs uppercase text-slate-500">{r.category} · {r.audience}</p><a className="inline-flex items-center text-primary" href={r.url} target="_blank" rel="noreferrer">Open link <ExternalLink className="ml-1 h-3 w-3"/></a><div className="mt-4 flex gap-2"><Button size="sm" variant="outline" onClick={async()=>{await updateResource(r.id,{is_published:!r.is_published});await load()}}>{r.is_published?"Unpublish":"Publish"}</Button><Button size="sm" variant="destructive" onClick={()=>remove("resource",()=>deleteResource(r.id))}><Trash2 className="h-4 w-4"/></Button></div></Record>):<Empty text="No forms or links yet."/>}</div></TabsContent>
+  <TabsContent value="gallery" className="space-y-6"><Card className="p-6"><h2 className="text-xl font-bold">Add gallery image</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><Pick label="Category" value={category} values={["events","classroom","activities","achievements"]} run={setCategory}/><Field label="High-resolution image"><Input type="file" accept="image/jpeg,image/png,image/webp" onChange={upload} disabled={uploading}/></Field></div>{uploading&&<p className="mt-2 text-sm">Uploading…</p>}</Card><div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">{images.map(i=><Card key={i.id} className="overflow-hidden"><img src={i.image_url} alt={i.description||i.title||"School gallery"} className="aspect-square w-full object-cover"/><div className="flex justify-between p-3"><small>{i.category}</small><Button size="sm" variant="destructive" onClick={()=>remove("image",()=>deleteImage(i.id,i.image_url))}><Trash2 className="h-4 w-4"/></Button></div></Card>)}</div></TabsContent>
+  <TabsContent value="donations" className="space-y-4">{donations.length?donations.map(d=><Record key={d.id} title={d.donor_name} status={d.status} when={d.created_at}><p><a href={`tel:${d.phone}`} className="text-primary">{d.phone}</a>{d.email&&<> · <a href={`mailto:${d.email}`} className="text-primary">{d.email}</a></>}</p><p><b>{d.purpose}</b>{d.amount?` · ₹${d.amount.toLocaleString("en-IN")}`:""}</p><Button className="mt-4" size="sm" variant="outline" onClick={async()=>{await updateDonationStatus(d.id,"received");await load()}}><Check className="mr-1 h-4 w-4"/>Mark received</Button></Record>):<Empty text="No donation records yet."/>}</TabsContent>
+  </Tabs></main></div>;
 }
+
+function Field({label,children}:{label:string;children:React.ReactNode}){return <div className="space-y-2"><Label>{label}</Label>{children}</div>}
+function Pick({label,value,values,run}:{label:string;value:string;values:string[];run:(v:string)=>void}){return <Field label={label}><Select value={value} onValueChange={run}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>{values.map(v=><SelectItem key={v} value={v}>{v}</SelectItem>)}</SelectContent></Select></Field>}
+function SearchBox({value,set,text}:{value:string;set:(v:string)=>void;text:string}){return <div className="relative"><Search className="absolute left-3 top-3 h-4 w-4 text-slate-400"/><Input className="bg-white pl-10" value={value} onChange={e=>set(e.target.value)} placeholder={text}/></div>}
+function Record({title,status,when,children}:{title:string;status?:string|null;when:string|null;children:React.ReactNode}){return <Card className="p-5 shadow-sm"><div className="mb-4 flex justify-between gap-3"><div><h3 className="text-lg font-bold">{title}</h3><small className="text-slate-500">{fmt(when)}</small></div><span className={`h-fit rounded-full px-2.5 py-1 text-xs font-bold capitalize ${tone(status)}`}>{status||"new"}</span></div><div className="text-sm leading-6 text-slate-600">{children}</div></Card>}
+function Actions({values,current,run}:{values:string[];current?:string|null;run:(v:string)=>void}){return <div className="mt-4 flex flex-wrap gap-2">{values.map(v=><Button key={v} size="sm" variant={current===v?"default":"outline"} onClick={()=>run(v)}>{v}</Button>)}</div>}
+function Empty({text}:{text:string}){return <Alert><AlertDescription>{text}</AlertDescription></Alert>}
+
