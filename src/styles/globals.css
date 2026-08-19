@@ -94,12 +94,30 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: hsl(var(--accent) / 0.35);
   }
 }
 
 @layer components {
   .container {
     @apply mx-auto px-4 md:px-6 lg:px-8 max-w-7xl w-full;
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      radial-gradient(circle at 80% 20%, hsl(var(--accent) / 0.18), transparent 35%);
+    background-size: 42px 42px, 42px 42px, 100% 100%;
+  }
+
+  .section-kicker {
+    @apply text-xs font-bold uppercase tracking-[0.18em] text-primary;
   }
   
   /* Logo Title */
@@ -143,3 +161,4 @@
     @apply font-display italic font-normal;
   }
 }
+

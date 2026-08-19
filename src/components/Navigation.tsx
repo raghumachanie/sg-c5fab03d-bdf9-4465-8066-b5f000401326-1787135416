@@ -1,109 +1,77 @@
-import Link from "next/link";
-import { useState } from "react";
-import { Menu, X, Phone } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { Menu, Phone, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+  { href: "/academics", label: "Academics" },
+  { href: "/admissions", label: "Admissions" },
+  { href: "/gallery", label: "Gallery" },
+  { href: "/contact", label: "Contact" },
+];
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const mainNavLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About Us" },
-  { href: "/academics", label: "Program" },
-  { href: "/academics", label: "Learning" },
-  { href: "/donate", label: "Supports" },
-  { href: "/contact", label: "Contacts" }];
-
+  const { pathname } = useRouter();
 
   return (
-    <nav className="sticky top-0 z-50 w-full bg-card shadow-sm">
-      {/* Top Bar - Teal with phone and links */}
+    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/95 shadow-sm backdrop-blur">
       <div className="bg-primary text-primary-foreground">
-        <div className="container">
-          <div className="flex h-10 items-center justify-between text-sm">
-            <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4" />
-              <span className="font-subtitle font-medium">+918861949711</span>
-            </div>
-            <div className="hidden md:flex items-center gap-6">
-              <Link href="/gallery" className="font-subtitle font-medium hover:text-accent transition-colors">
-                Blog
-              </Link>
-              <Link href="/contact" className="font-subtitle font-medium hover:text-accent transition-colors">
-                Contact Us
-              </Link>
-              <Link href="/admin/login" className="font-subtitle font-medium hover:text-accent transition-colors">
-                Admin
-              </Link>
-            </div>
-          </div>
+        <div className="container flex min-h-10 items-center justify-between gap-4 py-2 text-sm">
+          <a href="tel:+918861949711" className="flex items-center gap-2 font-medium hover:text-accent">
+            <Phone aria-hidden="true" className="h-4 w-4" />
+            <span>+91 88619 49711</span>
+          </a>
+          <p className="hidden text-xs opacity-90 sm:block">Education with care, opportunity and purpose</p>
         </div>
       </div>
 
-      {/* Main Navigation - Gold/Tan background */}
-      <div className="bg-accent/20 border-b-2 border-accent/30">
-        <div className="container">
-          <div className="flex h-20 items-center justify-between">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative h-14 w-14 flex-shrink-0">
-                <Image
-                  src="/logo.jpg"
-                  alt="Sri Sai Balaji Educational Trust"
-                  fill
-                  className="object-contain" />
-                
-              </div>
-              <div className="hidden sm:block">
-                <div className="logo-title text-base leading-tight">SRI BALAJI
+      <nav className="container flex min-h-20 items-center justify-between gap-5" aria-label="Main navigation">
+        <Link href="/" className="flex items-center gap-3" aria-label="Sri Balaji Educational Trust home">
+          <span className="relative h-14 w-14 overflow-hidden rounded-full bg-white shadow-sm">
+            <Image src="/logo.jpg" alt="" fill sizes="56px" className="object-contain" priority />
+          </span>
+          <span className="hidden sm:block">
+            <span className="block font-display text-lg font-bold leading-tight text-[#002147]">SRI BALAJI</span>
+            <span className="block text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Educational Trust</span>
+          </span>
+        </Link>
 
-                </div>
-                <div className="logo-subtitle text-[10px]">
-                  Educational Trust
-                </div>
-              </div>
-            </Link>
-
-            <div className="hidden lg:flex lg:items-center lg:gap-8">
-              {mainNavLinks.map((link) =>
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-subtitle font-medium text-foreground transition-colors hover:text-primary relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent after:transition-all hover:after:w-full">
-                
-                  {link.label}
-                </Link>
-              )}
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden text-foreground hover:bg-muted"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-              
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </div>
-
-          {mobileMenuOpen &&
-          <div className="pb-6 lg:hidden border-t border-border/50">
-              <div className="flex flex-col gap-1 pt-4">
-                {mainNavLinks.map((link) =>
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm font-subtitle font-medium text-foreground hover:text-primary hover:bg-muted transition-colors py-3 px-4 rounded-md"
-                onClick={() => setMobileMenuOpen(false)}>
-                
-                    {link.label}
-                  </Link>
-              )}
-              </div>
-            </div>
-          }
+        <div className="hidden items-center gap-1 lg:flex">
+          {navLinks.map((link) => {
+            const active = pathname === link.href;
+            return (
+              <Link key={link.href} href={link.href} aria-current={active ? "page" : undefined}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${active ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted hover:text-primary"}`}>
+                {link.label}
+              </Link>
+            );
+          })}
+          <Button asChild className="ml-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"><Link href="/donate">Support us</Link></Button>
         </div>
-      </div>
-    </nav>);
 
+        <Button type="button" variant="ghost" size="icon" className="lg:hidden" aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-navigation" aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          onClick={() => setMobileMenuOpen((open) => !open)}>
+          {mobileMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+        </Button>
+      </nav>
+
+      {mobileMenuOpen ? (
+        <nav id="mobile-navigation" className="container border-t border-border/70 pb-5 pt-3 lg:hidden" aria-label="Mobile navigation">
+          <div className="grid gap-1">
+            {navLinks.map((link) => (
+              <Link key={link.href} href={link.href} className="rounded-lg px-4 py-3 font-semibold hover:bg-muted" onClick={() => setMobileMenuOpen(false)}>{link.label}</Link>
+            ))}
+            <Link href="/donate" className="mt-2 rounded-lg bg-accent px-4 py-3 text-center font-bold text-accent-foreground" onClick={() => setMobileMenuOpen(false)}>Support our mission</Link>
+          </div>
+        </nav>
+      ) : null}
+    </header>
+  );
 }
+
