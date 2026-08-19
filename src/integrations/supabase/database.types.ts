@@ -240,6 +240,75 @@ export type Database = {
         }
         Relationships: []
       }
+      students: {
+        Row: {
+          academic_year: string
+          address: string | null
+          admission_date: string
+          admission_number: string
+          class_name: string
+          created_at: string
+          date_of_birth: string | null
+          fee_status: string
+          first_name: string
+          gender: string | null
+          guardian_email: string | null
+          guardian_name: string
+          guardian_phone: string
+          id: string
+          last_name: string | null
+          notes: string | null
+          section: string | null
+          source_inquiry_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          academic_year: string
+          address?: string | null
+          admission_date?: string
+          admission_number: string
+          class_name: string
+          created_at?: string
+          date_of_birth?: string | null
+          fee_status?: string
+          first_name: string
+          gender?: string | null
+          guardian_email?: string | null
+          guardian_name: string
+          guardian_phone: string
+          id?: string
+          last_name?: string | null
+          notes?: string | null
+          section?: string | null
+          source_inquiry_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          academic_year?: string
+          address?: string | null
+          admission_date?: string
+          admission_number?: string
+          class_name?: string
+          created_at?: string
+          date_of_birth?: string | null
+          fee_status?: string
+          first_name?: string
+          gender?: string | null
+          guardian_email?: string | null
+          guardian_name?: string
+          guardian_phone?: string
+          id?: string
+          last_name?: string | null
+          notes?: string | null
+          section?: string | null
+          source_inquiry_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
