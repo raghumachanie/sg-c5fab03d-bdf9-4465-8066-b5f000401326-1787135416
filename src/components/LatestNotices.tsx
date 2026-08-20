@@ -16,6 +16,17 @@ export function LatestNotices() {
       setLoading(false);
     }
     fetchNotices();
+
+    const refresh = () => fetchNotices();
+    const timer = window.setInterval(refresh, 15000);
+    window.addEventListener("focus", refresh);
+    window.addEventListener("school-notices-updated", refresh);
+
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("school-notices-updated", refresh);
+    };
   }, []);
 
   if (loading) {
@@ -70,3 +81,4 @@ export function LatestNotices() {
     </div>
   );
 }
+
