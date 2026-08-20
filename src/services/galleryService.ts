@@ -45,8 +45,8 @@ export async function uploadImage(
     const filePath = `gallery/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
-      .from("gallery")
-      .upload(filePath, file);
+      .from("school-files")
+      .upload(filePath, file, { cacheControl: "3600", upsert: false });
 
     if (uploadError) {
       console.error("Error uploading image:", uploadError);
@@ -55,7 +55,7 @@ export async function uploadImage(
 
     const {
       data: { publicUrl },
-    } = supabase.storage.from("gallery").getPublicUrl(filePath);
+    } = supabase.storage.from("school-files").getPublicUrl(filePath);
 
     const { data, error } = await supabase
       .from("gallery_images")
@@ -83,12 +83,13 @@ export async function deleteImage(
   imageUrl: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const filePath = imageUrl.split("/gallery/")[1];
+    const marker = "/school-files/";
+    const filePath = imageUrl.includes(marker) ? imageUrl.split(marker)[1] : null;
 
     if (filePath) {
       const { error: storageError } = await supabase.storage
-        .from("gallery")
-        .remove([`gallery/${filePath}`]);
+        .from("school-files")
+        .remove([filePath]);
 
       if (storageError) {
         console.error("Error deleting file from storage:", storageError);
@@ -111,3 +112,4 @@ export async function deleteImage(
     };
   }
 }
+
